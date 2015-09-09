@@ -20,3 +20,5 @@ target/
 # IntelliJ additions
 *.iml
 .idea/
+
+testatt.txt

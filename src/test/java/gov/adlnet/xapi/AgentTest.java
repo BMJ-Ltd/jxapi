@@ -1,20 +1,20 @@
 package gov.adlnet.xapi;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.UUID;
-
-import com.google.gson.*;
-
 import gov.adlnet.xapi.client.AgentClient;
-import gov.adlnet.xapi.model.Account;
 import gov.adlnet.xapi.model.Agent;
 import gov.adlnet.xapi.model.AgentProfile;
 import gov.adlnet.xapi.model.Person;
 
+import java.io.IOException;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.UUID;
+
 import junit.framework.TestCase;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 public class AgentTest extends TestCase {
 	private static final String LRS_URI = "https://lrs.adlnet.gov/xAPI/";

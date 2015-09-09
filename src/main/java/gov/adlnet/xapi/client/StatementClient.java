@@ -29,20 +29,31 @@ import org.bouncycastle.util.encoders.Hex;
 public class StatementClient extends BaseClient {
 	private TreeMap<String, String> filters;
     private static final String LINE_FEED = "\r\n";
+    
+    public StatementClient(String uri, String user, String password)
+            throws java.net.MalformedURLException {
+        super(new URL(uri), user, password);
+    }
 
-	public StatementClient(String uri, String user, String password)
+    public StatementClient(URL uri, String user, String password)
+            throws MalformedURLException {
+        super(uri, user, password);
+    }
+
+	public StatementClient(String uri, String adapter, String user, String password)
 			throws java.net.MalformedURLException {
-		super(new URL(uri), user, password);
+		super(new URL(uri), adapter, user, password);
 	}
 
-	public StatementClient(URL uri, String user, String password)
+	public StatementClient(URL uri, String adapter, String user, String password)
 			throws MalformedURLException {
-		super(uri, user, password);
+		super(uri, adapter, user, password);
 	}
 
     protected HttpURLConnection initializeConnectionForAttachments(URL url, String boundary)
             throws IOException {
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setConnectTimeout(Integer.parseInt((String)propertiesLoader.load().get("lrs.timeout")));
         conn.setDoInput(true);
         conn.addRequestProperty("X-Experience-API-Version", "1.0.0");
         conn.setRequestProperty("Content-Type", "multipart/mixed; boundary=" + boundary);
@@ -62,7 +73,7 @@ public class StatementClient extends BaseClient {
     protected String issuePostWithFileAttachment(String path, String data, String contentType, ArrayList<byte[]> attachmentData)
             throws java.io.IOException, NoSuchAlgorithmException {
         String boundary = "===" + System.currentTimeMillis() + "===";
-        URL url = new URL(this._host.getProtocol(), this._host.getHost(),this._host.getPort() ,path);
+        URL url = new URL(this._host.getProtocol(), this._host.getHost(), this._host.getPort(), this.adapter + path);
         HttpURLConnection conn = initializePOSTConnectionForAttachments(url, boundary);
         OutputStreamWriter writer = new OutputStreamWriter(
                 conn.getOutputStream());
@@ -110,7 +121,7 @@ public class StatementClient extends BaseClient {
 			throws java.io.IOException {
 		Gson gson = getDecoder();
 		String json = gson.toJson(statement);
-		String result = issuePost("/xapi/statements", json);
+		String result = issuePost("/xAPI/statements", json);
 		JsonArray jsonResult = gson.fromJson(result, JsonArray.class);
 		return jsonResult.get(0).getAsString();
 	}
@@ -119,7 +130,7 @@ public class StatementClient extends BaseClient {
             throws java.io.IOException {
         Gson gson = getDecoder();
         String json = gson.toJson(statement);
-        String result = issuePut("/xapi/statements?statementId=" + stmtId, json);
+        String result = issuePut("/xAPI/statements?statementId=" + stmtId, json);
         return result.isEmpty();
     }
 
@@ -127,11 +138,10 @@ public class StatementClient extends BaseClient {
             throws IOException, NoSuchAlgorithmException{
         Gson gson = getDecoder();
         String json = gson.toJson(statement);
-        String result = issuePostWithFileAttachment("/xapi/statements", json, contentType, attachmentData);
+        String result = issuePostWithFileAttachment("/xAPI/statements", json, contentType, attachmentData);
         JsonArray jsonResult = gson.fromJson(result, JsonArray.class);
         return jsonResult.get(0).getAsString();
     }
-
 
 	public StatementResult getStatements(String more)
 			throws java.io.IOException {
@@ -141,7 +151,7 @@ public class StatementClient extends BaseClient {
 
 	public StatementResult getStatements() throws java.io.IOException {
 		StringBuilder query = new StringBuilder();
-		query.append("/xapi/statements");
+		query.append("/xAPI/statements");
 		if (this.filters != null && !this.filters.isEmpty()) {
 			query.append("?");
 			for (Entry<String, String> item : this.filters.entrySet()) {
@@ -159,7 +169,7 @@ public class StatementClient extends BaseClient {
 
     public String getStatementsWithAttachments() throws java.io.IOException {
         StringBuilder query = new StringBuilder();
-        query.append("/xapi/statements");
+        query.append("/xAPI/statements");
         if (this.filters != null && !this.filters.isEmpty()) {
             query.append("?");
             for (Entry<String, String> item : this.filters.entrySet()) {
@@ -181,13 +191,13 @@ public class StatementClient extends BaseClient {
     }
 
     public Statement get(String statementId) throws java.io.IOException {
-		String result = this.issueGet("/xapi/statements?statementId="
+		String result = this.issueGet("/xAPI/statements?statementId="
 				+ statementId);
 		return this.getDecoder().fromJson(result, Statement.class);
 	}
 
 	public Statement getVoided(String statementId) throws java.io.IOException {
-		String result = this.issueGet("/xapi/statements?voidedStatementId="
+		String result = this.issueGet("/xAPI/statements?voidedStatementId="
 				+ statementId);
 		return this.getDecoder().fromJson(result, Statement.class);
 	}

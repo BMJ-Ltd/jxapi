@@ -1,13 +1,10 @@
 package gov.adlnet.xapi;
 
 import gov.adlnet.xapi.client.ActivityClient;
-import gov.adlnet.xapi.client.StatementClient;
 import gov.adlnet.xapi.model.Activity;
 import gov.adlnet.xapi.model.ActivityProfile;
 import gov.adlnet.xapi.model.ActivityState;
 import gov.adlnet.xapi.model.Agent;
-import gov.adlnet.xapi.model.Statement;
-import gov.adlnet.xapi.model.Verb;
 
 import java.io.IOException;
 import java.net.URL;
@@ -105,13 +102,6 @@ public class ActivityTest extends TestCase {
     }
 
 	public void testGetActivity() throws IOException {
-		StatementClient sc = new StatementClient(LRS_URI, USERNAME, PASSWORD);
-        Agent a = new Agent();
-        a.setMbox(MBOX);
-        Verb v = new Verb("http://example.com/tested");
-        Activity act = new Activity(ACTIVITY_ID);
-        Statement st = new Statement(a, v, act);
-
         ActivityClient _client = new ActivityClient(LRS_URI, USERNAME, PASSWORD);
 		Activity returnAct = _client.getActivity(ACTIVITY_ID);
 		assertNotNull(returnAct);

@@ -2,7 +2,8 @@ package gov.adlnet.xapi.model;
 
 import java.net.URI;
 
-import com.google.gson.*;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 public abstract class Actor {
 	private String name;

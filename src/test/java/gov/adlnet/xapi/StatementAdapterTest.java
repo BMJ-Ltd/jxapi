@@ -4,13 +4,12 @@ import gov.adlnet.xapi.model.Actor;
 import gov.adlnet.xapi.model.Agent;
 import gov.adlnet.xapi.model.IStatementObject;
 import gov.adlnet.xapi.model.Statement;
-import gov.adlnet.xapi.model.Verbs;
-import gov.adlnet.xapi.model.adapters.*;
+import gov.adlnet.xapi.model.adapters.ActorAdapter;
+import gov.adlnet.xapi.model.adapters.StatementObjectAdapter;
+import junit.framework.TestCase;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
-import junit.framework.TestCase;
 
 public class StatementAdapterTest extends TestCase {
 	private String testString = "{\"actor\":{\"mbox\":\"mailto:tom@example.com\"}, \"verb\":{\"id\":\"http://adlnet.gov/expapi/verbs/asked\"}, \"object\":{\"id\":\"q://do/you/like/green-eggs-n-ham\"}}";
