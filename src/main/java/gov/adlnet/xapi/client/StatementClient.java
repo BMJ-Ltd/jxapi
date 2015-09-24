@@ -145,7 +145,7 @@ public class StatementClient extends BaseClient {
 
 	public StatementResult getStatements(String more)
 			throws java.io.IOException {
-		String result = this.issueGet(more);
+		String result = this.issueGet(more, false);
 		return this.getDecoder().fromJson(result, StatementResult.class);
 	}
 
@@ -205,7 +205,7 @@ public class StatementClient extends BaseClient {
 	private StatementClient addFilter(String key, String value) {
 		try {
 			StatementClient client = new StatementClient(this._host,
-					this.username, this.password);
+					this.username, this.adapter, this.password);
 			if (client.filters == null) {
 				client.filters = new TreeMap<String, String>();
 			}

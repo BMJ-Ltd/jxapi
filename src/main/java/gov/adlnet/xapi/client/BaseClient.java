@@ -23,14 +23,16 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 public class BaseClient {
+    
 	protected URL _host;
 	protected String adapter;
-	protected Gson gson;
 	protected String username;
 	protected String password;
 	protected String authString;
-	
+	protected Gson gson;
 	protected PropertiesLoader propertiesLoader = new PropertiesLoader();
+	
+	// Constructors
 	
 	public BaseClient(String uri, String username, String password)
             throws MalformedURLException {
@@ -50,7 +52,12 @@ public class BaseClient {
 	public BaseClient(URL uri, String adapter, String username, String password)
 			throws MalformedURLException {
 		init(uri, adapter, username, password);
-	}	
+	}
+	
+	// END Constructors
+	
+	// Initialisation
+	
 	protected Gson getDecoder() {	
 		if (gson == null) {
 			GsonBuilder builder = new GsonBuilder();
@@ -70,6 +77,8 @@ public class BaseClient {
         this.authString = "Basic " + Base64.encodeToString((this.username + ":" + this.password).getBytes(), Base64.NO_WRAP);
     }
 
+	// END Initialisation
+	
 	protected String readFromConnection(HttpURLConnection conn)
 			throws java.io.IOException {
 		InputStream in;
@@ -219,30 +228,34 @@ public class BaseClient {
             conn.disconnect();
         }
     }
+    
+    protected String issueGet(String path) throws java.io.IOException {
+        return issueGet(path, true);
+    }
 
-	protected String issueGet(String path) throws java.io.IOException {
-		URL url = new URL(this._host.getProtocol(), this._host.getHost(), this._host.getPort(), this.adapter + path);
+    protected String issueGet(String path, boolean adapter) throws java.io.IOException {
+        URL url = new URL(this._host.getProtocol(), this._host.getHost(), this._host.getPort(), (adapter ? this.adapter : "") + path);
         HttpURLConnection conn = initializeConnection(url);
         try {
-			return readFromConnection(conn);
-		} catch (IOException ex) {
-			InputStream s = conn.getErrorStream();
-			InputStreamReader isr = new InputStreamReader(s);
-			BufferedReader br = new BufferedReader(isr);
-			try {
-				String line;
-				while((line = br.readLine()) != null){
-					System.out.print(line);
-				}
-				System.out.println();
-			} finally {
-				s.close();
-			}
-			throw ex;
-		}finally {
-			conn.disconnect();
-		}
-	}
+            return readFromConnection(conn);
+        } catch (IOException ex) {
+            InputStream s = conn.getErrorStream();
+            InputStreamReader isr = new InputStreamReader(s);
+            BufferedReader br = new BufferedReader(isr);
+            try {
+                String line;
+                while((line = br.readLine()) != null){
+                    System.out.print(line);
+                }
+                System.out.println();
+            } finally {
+                s.close();
+            }
+            throw ex;
+        }finally {
+            conn.disconnect();
+        }
+    }
 
     protected HttpServletResponse issueGetWithAttachments(String path) throws java.io.IOException {
         URL url = new URL(this._host.getProtocol(), this._host.getHost(), this._host.getPort(), this.adapter + path);
