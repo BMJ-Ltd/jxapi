@@ -36,8 +36,15 @@ public class Statement {
 		return timestamp;
 	}
 	public Date getTimestampAsDate() throws ParseException {
-	    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSSXXX");
-	    return formatter.parse(timestamp);
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+        
+        // We need to get rid of the microseconds because Date only has milliseconds
+        // This is the format of a time stamp in the LRS 2015-09-25T14:20:25.745100+00:00
+        final String YEARS_TO_MILLISECONDS = "yyyy-MM-ddTHH:mm:ss.SSS";
+        String time = timestamp.substring(0, YEARS_TO_MILLISECONDS.length())
+            + timestamp.substring(timestamp.length() - 6);
+                        
+        return formatter.parse(time);
 	}
 	public void setTimestamp(String timestamp) {
 		this.timestamp = timestamp;
