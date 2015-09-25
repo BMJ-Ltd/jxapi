@@ -1,11 +1,14 @@
 package gov.adlnet.xapi.model;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.UUID;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-
-import java.util.ArrayList;
-import java.util.UUID;
 
 public class Statement {
 	private String id;
@@ -31,6 +34,10 @@ public class Statement {
 	
 	public String getTimestamp() {
 		return timestamp;
+	}
+	public Date getTimestampAsDate() throws ParseException {
+	    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSSXXX");
+	    return formatter.parse(timestamp);
 	}
 	public void setTimestamp(String timestamp) {
 		this.timestamp = timestamp;
