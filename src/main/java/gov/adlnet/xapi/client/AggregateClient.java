@@ -1,5 +1,7 @@
 package gov.adlnet.xapi.client;
 
+import gov.adlnet.xapi.model.Aggregate;
+
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -30,9 +32,11 @@ public class AggregateClient extends BaseClient
      * @return a String containing a JSON object with the result
      * @throws IOException if the request did not work
      */
-    public String getAggregate(String pipeline) throws IOException
+    public Aggregate getAggregate(String pipeline) throws IOException
     {
         String path = "/api/v1/statements/aggregate?pipeline=" + URLEncoder.encode(pipeline, UTF_8);
-        return issueGet(path);
+        String result = issueGet(path);
+
+        return this.getDecoder().fromJson(result, Aggregate.class);
     }
 }
