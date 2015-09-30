@@ -3,6 +3,7 @@ package gov.adlnet.xapi.model;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -198,8 +199,9 @@ public class ActivityDefinition {
 	}
 	
 	public String toString() {
-		if (name != null)
-			return name.get("en-US");
+	    Set<String> keySet = name.keySet();
+		if (name != null && keySet != null && keySet.size() > 0)
+			return name.get(keySet.iterator().next());
 		return "";
 	}
     public String toString(String langMap) {

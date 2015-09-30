@@ -19,7 +19,7 @@ public class Statement {
 	private Actor actor;
 	private IStatementObject object;
 	private Result result;
-	private Context context;	
+	private Context context;
 	private Actor authority;
 	private ArrayList<Attachment> attachments;
 	
