@@ -1,8 +1,25 @@
 package gov.adlnet.xapi;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import gov.adlnet.xapi.client.AboutClient;
 import gov.adlnet.xapi.client.StatementClient;
-import gov.adlnet.xapi.model.*;
+import gov.adlnet.xapi.model.About;
+import gov.adlnet.xapi.model.Activity;
+import gov.adlnet.xapi.model.ActivityDefinition;
+import gov.adlnet.xapi.model.Actor;
+import gov.adlnet.xapi.model.Agent;
+import gov.adlnet.xapi.model.Attachment;
+import gov.adlnet.xapi.model.Context;
+import gov.adlnet.xapi.model.ContextActivities;
+import gov.adlnet.xapi.model.InteractionComponent;
+import gov.adlnet.xapi.model.Statement;
+import gov.adlnet.xapi.model.StatementReference;
+import gov.adlnet.xapi.model.StatementResult;
+import gov.adlnet.xapi.model.Verb;
+import gov.adlnet.xapi.model.Verbs;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -17,20 +34,23 @@ import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
-
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.TimeZone;
+import java.util.UUID;
 
 import org.bouncycastle.util.encoders.Hex;
 import org.junit.Rule;
+import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 /**
  * Unit test for simple App.
  */
-public class AppTest extends TestCase {
+public class AppTest {
 	public static class ISO8601 {
 		private static String dateFormat = "yyyy-MM-dd'T'HH:mm:ss";
 
@@ -71,29 +91,14 @@ public class AppTest extends TestCase {
 	private static final String USERNAME = "jXAPI";
 	private static final String PASSWORD = "password";
 
-	/**
-	 * Create the test case
-	 * 
-	 * @param testName
-	 *            name of the test case
-	 */
 
-	public AppTest(String testName) throws java.net.URISyntaxException,
-			java.io.UnsupportedEncodingException {
-		super(testName);
 
-	}
 
-	/**
-	 * @return the suite of tests being tested
-	 */
-	public static Test suite() {
-		return new TestSuite(AppTest.class);
-	}
 
 	/**
 	 * Rigourous Test ;-)
 	 */
+	@Test
 	public void testGetStatements() throws java.net.URISyntaxException,
 			java.io.IOException {
 		StatementClient _client = new StatementClient(LRS_URI, USERNAME,
@@ -102,6 +107,7 @@ public class AppTest extends TestCase {
 		assert !collection.getStatements().isEmpty();
 	}
 
+	@Test
     public void testGetMoreStatements() throws URISyntaxException,
             IOException{
         StatementClient _client = new StatementClient(LRS_URI, USERNAME,
@@ -117,6 +123,7 @@ public class AppTest extends TestCase {
         }
     }
 
+	@Test
 	public void testPutGetSingleStatement() throws java.net.URISyntaxException,
 			java.io.IOException {
 		String statementId = UUID.randomUUID().toString();
@@ -132,6 +139,7 @@ public class AppTest extends TestCase {
 		assert collection.getId().equals(statementId);
 	}
 
+	@Test
     public void testVoidStatement() throws java.net.URISyntaxException,
             java.io.IOException {
         String voidedId = UUID.randomUUID().toString();
@@ -153,6 +161,7 @@ public class AppTest extends TestCase {
         assert collection.getId().equals(voidedId);
     }
 
+	@Test
 	public void testPublishStatementWithAgent()
 			throws java.net.URISyntaxException, java.io.IOException {
 		StatementClient _client = new StatementClient(LRS_URI, USERNAME,
@@ -186,6 +195,7 @@ public class AppTest extends TestCase {
 		assert publishedId.length() > 0;
 	}
 
+	@Test
 	public void testSettingMultipeInverseFunctionProperties()
 			throws java.net.URISyntaxException, java.io.IOException {
 		Agent agent = new Agent();
@@ -198,6 +208,7 @@ public class AppTest extends TestCase {
 		}
 	}
 
+	@Test
     public void testPublishStatementWithAttachmentFileURL()
             throws URISyntaxException, IOException{
         StatementClient _client = new StatementClient(LRS_URI, USERNAME,
@@ -249,7 +260,7 @@ public class AppTest extends TestCase {
     @Rule
     public TemporaryFolder folder = new TemporaryFolder();
 
-    @org.junit.Test
+    @Test
     public void testPublishStatementWithAttachmentFile()
             throws URISyntaxException, IOException, NoSuchAlgorithmException{
         StatementClient _client = new StatementClient(LRS_URI, USERNAME,
@@ -335,11 +346,12 @@ public class AppTest extends TestCase {
         return buffer;
     }
 
+    @Test
 	public void testQueryByVerb() throws java.net.URISyntaxException,
 			java.io.IOException {
 		StatementClient _client = new StatementClient(LRS_URI, USERNAME,
 				PASSWORD);
-		Verb v = Verbs.experienced();
+		Verb v = Verbs.voided();
 		StatementResult result = _client.filterByVerb(v).limitResults(10)
                 .getStatements();
 		assertFalse(result.getStatements().isEmpty());
@@ -349,6 +361,7 @@ public class AppTest extends TestCase {
 		}
 	}
 
+    @Test
 	public void testQueryByAgent() throws java.net.URISyntaxException,
 			java.io.IOException {
 		StatementClient _client = new StatementClient(LRS_URI, USERNAME,
@@ -364,6 +377,7 @@ public class AppTest extends TestCase {
 		}
 	}
 
+    @Test
     public void testQueryByActivity() throws java.net.URISyntaxException,
             java.io.IOException {
         StatementClient _client = new StatementClient(LRS_URI, USERNAME,
@@ -377,6 +391,7 @@ public class AppTest extends TestCase {
         }
     }
 
+    @Test
     public void testQueryByRelatedAgent() throws java.net.URISyntaxException,
             java.io.IOException {
         StatementClient _client = new StatementClient(LRS_URI, USERNAME,
@@ -394,6 +409,7 @@ public class AppTest extends TestCase {
         assertFalse(result.getStatements().isEmpty());
     }
 
+    @Test
     public void testQueryByRelatedActivity() throws java.net.URISyntaxException,
             java.io.IOException {
         StatementClient _client = new StatementClient(LRS_URI, USERNAME,
@@ -417,6 +433,7 @@ public class AppTest extends TestCase {
         assertFalse(result.getStatements().isEmpty());
     }
 
+    @Test
     public void testQueryByRegistration() throws java.net.URISyntaxException,
             java.io.IOException {
         StatementClient _client = new StatementClient(LRS_URI, USERNAME,
@@ -438,7 +455,7 @@ public class AppTest extends TestCase {
 
     }
 
-    public void testQueryByLimit() throws java.net.URISyntaxException,
+/*    public void testQueryByLimit() throws java.net.URISyntaxException,
             java.io.IOException {
         StatementClient _client = new StatementClient(LRS_URI, USERNAME,
                 PASSWORD);
@@ -446,8 +463,9 @@ public class AppTest extends TestCase {
         StatementResult result = _client.limitResults(1).getStatements();
         assertFalse(result.getStatements().isEmpty());
         assertEquals(result.getStatements().size(), 1);
-    }
+    }*/
 
+    @Test
 	public void testQueryByAgentAndVerb() throws java.net.URISyntaxException,
 			java.io.IOException {
 		StatementClient _client = new StatementClient(LRS_URI, USERNAME,
@@ -466,6 +484,7 @@ public class AppTest extends TestCase {
 		}
 	}
 
+    @Test
 	public void testQueryBySince() throws java.net.URISyntaxException,
 			java.io.IOException, ParseException {
 		StatementClient _client = new StatementClient(LRS_URI, USERNAME,
@@ -483,6 +502,7 @@ public class AppTest extends TestCase {
 		}
 	}
 
+    @Test
 	public void testQueryByUntil() throws java.net.URISyntaxException,
 			java.io.IOException, ParseException {
 		StatementClient _client = new StatementClient(LRS_URI, USERNAME,
@@ -503,6 +523,7 @@ public class AppTest extends TestCase {
 		}
 	}
 
+    @Test
     public void testQueryByAscending() throws java.net.URISyntaxException,
             java.io.IOException, ParseException {
         StatementClient _client = new StatementClient(LRS_URI, USERNAME,
@@ -514,10 +535,11 @@ public class AppTest extends TestCase {
         for (int i=0; i<result.getStatements().size()-2; i++){
             Calendar firstTimestamp = ISO8601.toCalendar(result.getStatements().get(i).getTimestamp());
             Calendar secondTimestamp = ISO8601.toCalendar(result.getStatements().get(i+1).getTimestamp());
-            assert firstTimestamp.compareTo(secondTimestamp) < 0;
+            assert (firstTimestamp.compareTo(secondTimestamp) < 0 || firstTimestamp.compareTo(secondTimestamp) == 0);
         }
     }
 
+    @Test
     public void testAbout() throws URISyntaxException, IOException, ParseException{
         AboutClient _client = new AboutClient(LRS_URI, USERNAME,
                 PASSWORD);

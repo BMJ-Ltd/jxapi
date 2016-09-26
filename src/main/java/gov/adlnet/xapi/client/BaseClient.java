@@ -2,7 +2,9 @@ package gov.adlnet.xapi.client;
 
 import gov.adlnet.xapi.model.Actor;
 import gov.adlnet.xapi.model.IStatementObject;
+import gov.adlnet.xapi.model._id;
 import gov.adlnet.xapi.model.adapters.ActorAdapter;
+import gov.adlnet.xapi.model.adapters.RecIdAdapter;
 import gov.adlnet.xapi.model.adapters.StatementObjectAdapter;
 import gov.adlnet.xapi.util.Base64;
 import gov.adlnet.xapi.util.PropertiesLoader;
@@ -61,9 +63,10 @@ public class BaseClient {
 	protected Gson getDecoder() {	
 		if (gson == null) {
 			GsonBuilder builder = new GsonBuilder();
+			builder.registerTypeAdapter(_id.class, new RecIdAdapter());
 			builder.registerTypeAdapter(Actor.class, new ActorAdapter());
 			builder.registerTypeAdapter(IStatementObject.class,
-					new StatementObjectAdapter());
+					new StatementObjectAdapter());			
 			gson = builder.create();
 		}
 		return gson;
