@@ -242,18 +242,23 @@ public class BaseClient {
         try {
             return readFromConnection(conn);
         } catch (IOException ex) {
+            System.out.println(ex.getMessage());
             InputStream s = conn.getErrorStream();
-            InputStreamReader isr = new InputStreamReader(s);
-            BufferedReader br = new BufferedReader(isr);
-            try {
-                String line;
-                while((line = br.readLine()) != null){
-                    System.out.print(line);
+            if (s!=null)
+            {
+                InputStreamReader isr = new InputStreamReader(s);
+                BufferedReader br = new BufferedReader(isr);
+                try {
+                    String line;
+                    while((line = br.readLine()) != null){
+                        System.out.print(line);
+                    }
+                    System.out.println();
+                } finally {
+                    s.close();
                 }
-                System.out.println();
-            } finally {
-                s.close();
             }
+            
             throw ex;
         }finally {
             conn.disconnect();
