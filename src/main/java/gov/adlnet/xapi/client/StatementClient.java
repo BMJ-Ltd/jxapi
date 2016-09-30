@@ -125,6 +125,14 @@ public class StatementClient extends BaseClient {
 		JsonArray jsonResult = gson.fromJson(result, JsonArray.class);
 		return jsonResult.get(0).getAsString();
 	}
+	
+    public String postJson(String json) throws java.io.IOException
+    {       
+        String result = issuePost("/xAPI/statements", json);
+        Gson gson = getDecoder();
+        JsonArray jsonResult = gson.fromJson(result, JsonArray.class);
+        return jsonResult.get(0).getAsString();
+    }
 
     public Boolean putStatement(Statement statement, String stmtId)
             throws java.io.IOException {

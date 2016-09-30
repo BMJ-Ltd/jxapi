@@ -1,9 +1,5 @@
 package gov.adlnet.xapi;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import gov.adlnet.xapi.client.AboutClient;
 import gov.adlnet.xapi.client.StatementClient;
 import gov.adlnet.xapi.model.About;
@@ -42,7 +38,10 @@ import java.util.HashMap;
 import java.util.TimeZone;
 import java.util.UUID;
 
+import junit.framework.TestCase;
+
 import org.bouncycastle.util.encoders.Hex;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -50,7 +49,9 @@ import org.junit.rules.TemporaryFolder;
 /**
  * Unit test for simple App.
  */
-public class AppTest {
+@Ignore
+// Ignore the Integration tests that talk to the adlnet server
+public class AppTest extends TestCase {
 	public static class ISO8601 {
 		private static String dateFormat = "yyyy-MM-dd'T'HH:mm:ss";
 

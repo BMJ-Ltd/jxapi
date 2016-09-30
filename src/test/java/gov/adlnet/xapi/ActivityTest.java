@@ -11,6 +11,8 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.UUID;
 
+import org.junit.Ignore;
+
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -19,6 +21,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+@Ignore
+//Ignore the Integration tests that talk to the adlnet server
 public class ActivityTest extends TestCase {
 	private String PUT_PROFILE_ID;
     private String POST_PROFILE_ID;

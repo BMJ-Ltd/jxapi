@@ -10,12 +10,16 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.UUID;
 
+import org.junit.Ignore;
+
 import junit.framework.TestCase;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+@Ignore
+//Ignore the Integration tests that talk to the adlnet server
 public class AgentTest extends TestCase {
 	private static final String LRS_URI = "https://lrs.adlnet.gov/xAPI/";
 	private static final String USERNAME = "jXAPI";
