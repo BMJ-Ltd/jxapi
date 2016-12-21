@@ -39,4 +39,10 @@ public class AggregateClient extends BaseClient
 
         return this.getDecoder().fromJson(result, Aggregate.class);
     }
+    
+    public String getAggregateAsString(String pipeline) throws IOException
+    {
+        String path = "/api/v1/statements/aggregate?pipeline=" + URLEncoder.encode(pipeline, UTF_8);
+        return issueGet(path);
+    }
 }
